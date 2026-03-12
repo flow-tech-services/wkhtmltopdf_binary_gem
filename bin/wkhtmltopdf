@@ -43,9 +43,12 @@ suffix = case RbConfig::CONFIG['host_os']
                                   os.start_with?('linuxmint_21.')
 
            os = 'ubuntu_22.04' if os.start_with?('ubuntu_22.') ||
-                                  os.start_with?('tuxedo_22.')
+                                  os.start_with?('tuxedo_22.') ||
+                                  os.start_with?('linuxmint_22')
 
-           os = 'centos_6' if (os.start_with?('amzn_') && os != 'amzn_2') ||
+           os = 'ubuntu_24.04' if os.start_with?('ubuntu_24.')
+
+           os = 'centos_6' if (os.start_with?('amzn_') && os != 'amzn_2' && os != 'amzn_2023') ||
                               (os.empty? && File.read('/etc/centos-release').start_with?('CentOS release 6'))
 
            os = 'centos_7' if (os.start_with?('amzn_2') && !os.start_with?('amzn_20')) ||
@@ -53,7 +56,10 @@ suffix = case RbConfig::CONFIG['host_os']
 
            os = 'centos_8' if os.start_with?('rocky_8') ||
                               os.start_with?('rhel_8.') ||
-                              os.start_with?('ol_8.')
+                              os.start_with?('ol_8.') ||
+                              os.start_with?('almalinux_8') ||
+                              os.start_with?('alinux_') ||
+                              os == 'amzn_2023'
 
            os_based_on_debian_9 = os.start_with?('debian_9') ||
                                   os.start_with?('deepin')
@@ -64,6 +70,8 @@ suffix = case RbConfig::CONFIG['host_os']
            os = 'debian_11' if !os_based_on_debian_9 && os.start_with?('debian_11')
 
            os = 'debian_12' if !os_based_on_debian_9 && os.start_with?('debian_12')
+
+           os = 'debian_12' if !os_based_on_debian_9 && os.start_with?('debian_13')
 
            os = 'archlinux' if os.start_with?('arch_') ||
                                os.start_with?('manjaro_')
@@ -87,7 +95,7 @@ end
 
 unless File.exist? binary
   raise 'Invalid platform, must be running on Ubuntu 16.04/18.04/20.04/22.04, ' \
-        'CentOS 6/7/8, Debian 9/10/11/12, Archlinux amd64, Debian 9/10/11/12 arm64, or Intel-based Cocoa macOS ' \
+        'CentOS 6/7/8, Debian 9/10/11/12/13, Archlinux amd64, Debian 9/10/11/12/13 arm64, or Intel-based Cocoa macOS ' \
         "(missing binary: #{binary})."
 end
 
